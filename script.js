@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
             centerX, centerY, 0,
             centerX, centerY, heartSize * 0.6
         );
-        glow.addColorStop(0, 'rgba(255, 0, 50, 0.3)');
+        glow.addColorStop(0, 'rgba(180, 0, 50, 0.3)');
         glow.addColorStop(0.6, 'rgba(255, 0, 50, 0.1)');
         glow.addColorStop(1, 'rgba(255, 0, 50, 0)');
         ctx.globalCompositeOperation = 'lighter';
@@ -182,5 +182,5 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => balloon.remove(), 10000);
     }
 
-    setInterval(createBalloon, 300);
+    setInterval(createBalloon, 30);
 });
