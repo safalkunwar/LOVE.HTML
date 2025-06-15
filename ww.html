@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Do You Love Me?</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #ffdce0, #ffc2d1);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+    }
+    #veinCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+    .popup {
+      background: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      z-index: 10;
+      animation: fadeInPop 1s ease;
+    }
+    @keyframes fadeInPop {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .popup h1 {
+      font-size: 2rem;
+      color: #d6336c;
+      margin-bottom: 30px;
+    }
+    .buttons {
+    
+      justify-content: center;
+      gap: 30px;
+      position: relative;
+    }
+    .buttons button {
+      padding: 14px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .yes-btn {
+      background-color: #d6336c;
+      color: white;
+      box-shadow: 0 0 15px rgba(214, 51, 108, 0.5);
+      z-index: 1;
+    }
+    .no-btn {
+      background-color: #ddd;
+      color: #222;
+      position: absolute;
+      z-index: 1;
+    }
+    #cryingSticker {
+      display: none;
+      font-size: 3rem;
+      animation: shake 1s infinite alternate;
+      margin-top: 20px;
+    }
+    @keyframes shake {
+      0% { transform: rotate(-5deg); }
+      100% { transform: rotate(5deg); }
+    }
+    .balloon {
+      position: absolute;
+      width: 30px;
+      height: 40px;
+      background: pink;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: floatUp 6s linear infinite;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+    }
+    .heart-text {
+      position: absolute;
+      display: none;
+      white-space: pre;
+      font-family: monospace;
+      font-size: 14px;
+      color: #d6336c;
+      animation: growHeart 3s ease-in-out forwards, pulseGlow 2s infinite ease-in-out;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+    @keyframes growHeart {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { text-shadow: 0 0 10px #ff416c, 0 0 20px #ff4b2b; }
+      50% { text-shadow: 0 0 20px #ff6a88, 0 0 30px #ff4b2b; }
+    }
+    .message-box {
+      position: absolute;
+      bottom: 10%;
+      font-size: 1.5rem;
+      color: #d6336c;
+      animation: fadeInUp 2s ease-in-out;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .vein-heart {
+      display: none;
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle at center, #7b001e, #3a000f);
+      border-radius: 50% 50% 0 0;
+      transform: rotate(-45deg) scale(0);
+      animation: bulgingHeart 3s ease-in-out forwards;
+      top: 50%;
+      left: 50%;
+      transform-origin: center;
+      z-index: 3;
+    }
+    .vein-heart::before,
+    .vein-heart::after {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle at center, #7b001e, #3a000f);
+      border-radius: 50%;
+    }
+    .vein-heart::before {
+      top: -100px;
+      left: 0;
+    }
+    .vein-heart::after {
+      top: 0;
+      left: -100px;
+    }
+    @keyframes bulgingHeart {
+      0% { transform: rotate(-45deg) scale(0); opacity: 0; }
+      50% { transform: rotate(-45deg) scale(1.2); opacity: 1; }
+      100% { transform: rotate(-45deg) scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="veinCanvas"></canvas>
+  <div class="popup" id="popup">
+    <h1 id="question">Do You Love Me? 💌</h1>
+    <div class="buttons">
+      <button class="yes-btn" onclick="handleYes()">Yes</button>
+      <button class="no-btn" id="noBtn">No</button>
+    </div>
+    <div id="cryingSticker">😭💔</div>
+  </div>
+
+  <div class="heart-text" id="heartText">
+     I   Love   You
+   I   Love You Love I
+ I Love You     You Love I
+  I Love You       Love I
+   I Love You     Love I
+     I Love You Love I
+       I Love You
+  </div>
+
+  <div class="message-box" id="finalMsg" style="display:none;">I knew it! You love me ❤️ Love you for eternity! 💞<br>हामी भेट्ने कहिले?? 🤭</div>
+
+  <div class="vein-heart" id="veinHeart"></div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const question = document.getElementById('question');
+    const cryingSticker = document.getElementById('cryingSticker');
+    const popup = document.getElementById('popup');
+    const heartText = document.getElementById('heartText');
+    const finalMsg = document.getElementById('finalMsg');
+    const veinHeart = document.getElementById('veinHeart');
+    let noHoverTricks = 0;
+
+    noBtn.addEventListener('mouseenter', () => {
+      if (noHoverTricks >= 1) {
+        noBtn.style.top = Math.random() * 80 + '%';
+        noBtn.style.left = Math.random() * 80 + '%';
+      }
+    });
+
+    noBtn.addEventListener('click', () => {
+      noHoverTricks++;
+      if (noHoverTricks === 1) {
+        cryingSticker.style.display = 'block';
+        question.textContent = 'Are You Really Sure? 😢';
+      }
+    });
+
+    function handleYes() {
+         window.location.href = 'index.html';
+      cryingSticker.style.display = 'none';
+      popup.style.display = 'none';
+      heartText.style.display = 'block';
+      finalMsg.style.display = 'block';
+      veinHeart.style.display = 'block';
+      setInterval(createBalloons, 1000);
+    }
+
+
+    function createBalloons() {
+      for (let i = 0; i < 10; i++) {
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        balloon.style.left = Math.random() * 100 + 'vw';
+        balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 70%)`;
+        document.body.appendChild(balloon);
+        setTimeout(() => balloon.remove(), 6000);
+      }
+    }
+  </script>
+</body>
+</html>
