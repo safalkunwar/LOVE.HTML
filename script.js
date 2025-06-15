@@ -182,5 +182,5 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => balloon.remove(), 10000);
     }
 
-    setInterval(createBalloon, 30);
+    setInterval(createBalloon, 20);
 });
